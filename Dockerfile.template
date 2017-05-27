@@ -1,8 +1,4 @@
-FROM inodes/rtlsdr-baseimage:latest
-
-MAINTAINER Glenn Stewart <glenn@inodes.net>
-
-# The following packages are required for piaware compilation
+FROM resin/rpi-raspbian:jessie
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
@@ -21,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tclx8.4 \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/*
+
+RUN echo 'blacklist dvb_usb_rtl28xxu' > /etc/modprobe.d/rtlsdr-blacklist.conf
 
 # piaware (http://flightaware.com)
 # Requires dump1090 on localhost:30005
