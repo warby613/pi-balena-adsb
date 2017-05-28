@@ -26,10 +26,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY ./rtlsdr-blacklist.conf /etc/modprobe.d/rtlsdr-blacklist.conf
 
+# Unload the driver module to allow access to dongle
+RUN rmmod dvb_usb_rtl28xxu
+
+
 # piaware (http://flightaware.com)
 # Requires dump1090 on localhost:30005
 
-#WORKDIR /tmp
+WORKDIR /tmp
+
+RUN wget http://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_3.5.0_all.deb && \
+    sudo dpkg -i piaware-repository_3.5.0_all.deb && \
+    sudo apt-get update && \
+    sudo apt-get install piaware && \
+    sudo piaware-config allow-auto-updates yes && \
+    sudo piaware-config allow-manual-updates yes && \
+    sudo apt-get install dump1090-fa
+
+
+
 
 #RUN wget $(wget -qO- http://flightaware.com/adsb/piaware/install | egrep wget | awk '{print $3}' | awk -F\< '{print $1}') && \
 #    dpkg -i piaware*.deb
