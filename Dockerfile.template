@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/*
 
-#RUN echo 'blacklist dvb_usb_rtl28xxu' > /etc/modprobe.d/rtlsdr-blacklist.conf
+COPY ./rtlsdr-blacklist.conf /etc/modprobe.d/rtlsdr-blacklist.conf
 
 # piaware (http://flightaware.com)
 # Requires dump1090 on localhost:30005
@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 #CMD ["/root/start-dump1090-piaware.sh"]
 
-# here we copy all the root of our repo into the containers WORKDIR
-COPY . ./
+# Copy start script
+COPY start.sh ./
 
 CMD ["./start.sh"]
