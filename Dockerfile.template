@@ -62,3 +62,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #EXPOSE 80 8080 30001 30002 30003 30004 30005 30104
 
 #CMD ["/root/start-dump1090-piaware.sh"]
+
+# here we copy all the root of our repo into the containers WORKDIR
+COPY . ./
+
+CMD ["./start.sh"]
