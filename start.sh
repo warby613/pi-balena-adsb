@@ -29,6 +29,6 @@ fi
 echo "This is where your application would start..."
 while : ; do
   echo "waiting"
-  /usr/bin/piaware -showtraffic
+  /etc/init.d/piaware start
   sleep 60
 done
