@@ -36,13 +36,12 @@ WORKDIR /tmp
 RUN wget http://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_3.5.0_all.deb && \
     dpkg -i piaware-repository_3.5.0_all.deb
 
-RUN apt-get update && apt-get install -y piaware
+RUN apt-get update && apt-get install -y \
+    piaware &&
+    dump1090-fa
 
 RUN piaware-config allow-auto-updates yes && \
-    piaware-config allow-manual-updates yes && \
-    # piaware-config flightaware-user ${PIAWARE_USERNAME} && \
-    # piaware-config flightaware-password $PIAWARE_PASSWORD && \
-    piaware-config -showall
+    piaware-config allow-manual-updates yes
 
 WORKDIR /root
 
