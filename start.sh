@@ -3,7 +3,12 @@
 env > out.txt
 env
 
-echo $PIAWARE_USERNAME
+if [[ ! -z $PIAWARE_USERNAME ]] && [[ ! -z $PIAWARE_PASSWORD ]]; then
+  if [[ -x /usr/bin/piaware-config ]]; then
+    /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
+    /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
+  fi
+fi
 
 echo "This is where your application would start..."
 while : ; do
