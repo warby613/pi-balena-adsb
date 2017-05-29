@@ -4,13 +4,15 @@ env > out.txt
 env
 
 # Configure Flightaware
-if [[ ! -z $PIAWARE_USERNAME ]] && [[ ! -z $PIAWARE_PASSWORD ]]; then
+if [[ ! -z $PIAWARE_USERNAME ]] && \
+	[[ ! -z $PIAWARE_PASSWORD ]] && \
+	[[ ! -z $PIAWARE_MAC ]]; then
   if [[ -x /usr/bin/piaware-config ]]; then
     /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
     /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
+    /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
   fi
 fi
-
 
 # Unload the driver module to allow access to dongle
 rmmod dvb_usb_rtl28xxu
@@ -25,5 +27,6 @@ fi
 echo "This is where your application would start..."
 while : ; do
   echo "waiting"
+  /usr/bin/piaware
   sleep 60
 done
