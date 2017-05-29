@@ -36,7 +36,8 @@ WORKDIR /tmp
 RUN wget http://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_3.5.0_all.deb && \
     dpkg -i piaware-repository_3.5.0_all.deb
 
-RUN apt-get update && apt-get install -y piaware && \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    piaware \
     dump1090-fa
 
 RUN piaware-config allow-auto-updates yes && \
