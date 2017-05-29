@@ -48,7 +48,7 @@ WORKDIR /root
 
 COPY start-dump1090-piaware.sh .
 
-RUN ./start-dump1090-piaware.sh
+RUN /bin/bash -E ./start-dump1090-piaware.sh
 
 # Copy start script
 COPY start.sh ./

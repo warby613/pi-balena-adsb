@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+env > out.txt
+
 if [[ ! -z $PIAWARE_USERNAME ]] && [[ ! -z $PIAWARE_PASSWORD ]]; then
   if [[ -x /usr/bin/piaware-config ]]; then
     /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
