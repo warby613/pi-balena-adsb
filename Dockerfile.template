@@ -46,10 +46,6 @@ RUN piaware-config allow-auto-updates yes && \
 
 WORKDIR /root
 
-COPY start-dump1090-piaware.sh .
-
-CMD ["bash" "-E ./start-dump1090-piaware.sh"]
-
 # Copy start script
 COPY start.sh ./
 
