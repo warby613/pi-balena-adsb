@@ -1,5 +1,14 @@
 #!/bin/bash
 #
+env
+pwd
+echo $0
+echo $PIAWARE_USERNAME
+exit
+
+
+
+
 # Refer to https://hub.docker.com/r/inodes/rtlsdr-dump1090-piaware/
 if [[ -x ./dump1090 ]]
 then
