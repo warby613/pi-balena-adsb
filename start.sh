@@ -4,6 +4,7 @@ env > out.txt
 env
 
 # Configure Flightaware
+# See https://flightaware.com/adsb/piaware/claim for new entries
 if [[ ! -z $PIAWARE_USERNAME ]] && \
 	[[ ! -z $PIAWARE_PASSWORD ]] && \
 	[[ ! -z $PIAWARE_MAC ]]; then
@@ -12,6 +13,7 @@ if [[ ! -z $PIAWARE_USERNAME ]] && \
     /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
     /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
   fi
+  /usr/bin/piaware-config -showall
 fi
 
 # Unload the driver module to allow access to dongle
@@ -27,6 +29,6 @@ fi
 echo "This is where your application would start..."
 while : ; do
   echo "waiting"
-  /usr/bin/piaware
+  /usr/bin/piaware -showtraffic
   sleep 60
 done
