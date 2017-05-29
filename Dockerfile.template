@@ -1,6 +1,7 @@
 FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    apt-utils \
     build-essential \
     ca-certificates \
     cmake \
@@ -39,8 +40,8 @@ RUN apt-get update && apt-get install -y piaware
 
 RUN piaware-config allow-auto-updates yes && \
     piaware-config allow-manual-updates yes && \
-    piaware-config flightaware-user $PIAWARE_USERNAME && \
-    piaware-config flightaware-password $PIAWARE_PASSWORD && \
+    #piaware-config flightaware-user $PIAWARE_USERNAME && \
+    #piaware-config flightaware-password $PIAWARE_PASSWORD && \
     piaware-config -showall
 
 # Copy start script
