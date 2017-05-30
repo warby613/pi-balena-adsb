@@ -10,8 +10,8 @@ env
 [[ -z ${PIAWARE_USERNAME} ]] || /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
 [[ -z ${PIAWARE_PASSWORD} ]] || /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
 [[ -z ${PIAWARE_MAC} ]]      || /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
-[[ -z ${GAIN }]]             || /usr/bin/piaware-config rtlsdr-gain ${GAIN}
-[[ -z ${PPM }]]              || /usr/bin/piaware-config rtlsdr-ppm ${PPM}
+[[ -z ${GAIN} ]]             || /usr/bin/piaware-config rtlsdr-gain ${GAIN}
+[[ -z ${PPM} ]]              || /usr/bin/piaware-config rtlsdr-ppm ${PPM}
 /usr/bin/piaware-config -showall
 
 # Unload the driver module to allow access to dongle
