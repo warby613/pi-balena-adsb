@@ -1,5 +1,8 @@
 FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
 
+# Allow systemd to run - this is required for piaware and dump1090-fa
+ENV INITSYSTEM on
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
     build-essential \
