@@ -4,17 +4,15 @@ env > out.txt
 env
 
 # Configure Flightaware
+#
 # See https://flightaware.com/adsb/piaware/claim for new entries
-if [[ ! -z $PIAWARE_USERNAME ]] && \
-	[[ ! -z $PIAWARE_PASSWORD ]] && \
-	[[ ! -z $PIAWARE_MAC ]]; then
-  if [[ -x /usr/bin/piaware-config ]]; then
-    /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
-    /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
-    /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
-  fi
-  /usr/bin/piaware-config -showall
-fi
+# See https://flightaware.com/adsb/piaware/advanced_configuration for options
+[[ -z ${PIAWARE_USERNAME} ]] || /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
+[[ -z ${PIAWARE_PASSWORD} ]] || /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
+[[ -z ${PIAWARE_MAC} ]]      || /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
+[[ -z ${GAIN }]]             || /usr/bin/piaware-config rtlsdr-gain ${GAIN}
+[[ -z ${PPM }]]              || /usr/bin/piaware-config rtlsdr-ppm ${PPM}
+/usr/bin/piaware-config -showall
 
 # Unload the driver module to allow access to dongle
 rmmod dvb_usb_rtl28xxu
