@@ -23,12 +23,11 @@ rmmod dvb_usb_rtl28xxu
 # - /lib/systemd/system/dump1090-fa.service
 # - /lib/systemd/system/piaware.service
 
-systemctl status dump1090-fa.service
-systemctl status piaware.service -l
+sleep 10
 
-echo "This is where your application would start..."
 while : ; do
-  echo "waiting"
-  #/etc/init.d/piaware start
+  date
+  systemctl status dump1090-fa.service
+  systemctl status piaware.service -l
   sleep 60
 done
