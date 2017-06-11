@@ -25,11 +25,19 @@ sleep 10
 # Configure Planefinder
 # See https://planefinder.net/sharing/account
 PF_CLIENT="/usr/bin/pfclient"
-if [[ ! -z ${PF_SHARECODE} ]] && \
-   [[ ! -z ${LONG} ]] && \
-   [[ ! -z ${LAT} ]] && \
-   [[ -x ${PF_CLIENT} ]]; then
-   ${PF_CLIENT} --address=localhost --port=30005 --sharecode=${PF_SHARECODE} --lat=${LAT} --lon=${LONG} --data_format=1
+PF_CLIENT_CFG="/etc/pfclient-config.json"
+
+if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CONFIG} ]] && \
+   [[ ! -z ${PF_SHARECODE} ]] && \
+   [[ ! -z ${LONG} ]] && [[ ! -z ${LAT} ]]; then
+
+	sed -i '' "s/PF_SHARECODE/$PF_SHARECODE/" ${PF_CLIENT_CFG}
+	sed -i '' "s/LONG/$LONG/" ${PF_CLIENT_CFG}
+    sed -i '' "s/LAT/$LAT/" ${PF_CLIENT_CFG}
+    cat ${PF_CLIENT_CFG}
+	/etc/init.d/pfclient restart
+else
+	echo "Error with pfclient configuration"
 fi
 
 while true; do
