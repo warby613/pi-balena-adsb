@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Configure Flightaware
+# ==========================================
+# FLIGHTAWARE / PIAWARE
+# ==========================================
 # See https://flightaware.com/adsb/piaware/claim for new entries
 # See https://flightaware.com/adsb/piaware/advanced_configuration for options
 #
@@ -20,32 +22,36 @@ rmmod dvb_usb_rtl28xxu
 # - /lib/systemd/system/dump1090-fa.service
 # - /lib/systemd/system/piaware.service
 
-
-
-# Configure Planefinder
+# ==========================================
+# PLANEFINDER
+# ==========================================
 # See https://planefinder.net/sharing/account
+
 PF_CLIENT="/usr/bin/pfclient"
 PF_CLIENT_CFG="/etc/pfclient-config.json"
 
-if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CLIENT_CFG} ]] && \
-   [[ ! -z ${PF_SHARECODE} ]] && \
-   [[ ! -z ${LONG} ]] && [[ ! -z ${LAT} ]]; then
-
-	sed -i "s/PF_SHARECODE/$PF_SHARECODE/" ${PF_CLIENT_CFG}
-	sed -i "s/LONG/$LONG/" ${PF_CLIENT_CFG}
-    sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
-    cat ${PF_CLIENT_CFG}
-	/etc/init.d/pfclient restart
+if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CLIENT_CFG} ]]; then
+	if [[ ! -z ${PF_SHARECODE} ]] && \
+	   [[ ! -z ${LONG} ]] && \
+	   [[ ! -z ${LAT} ]]; then
+		sed -i "s/PF_SHARECODE/$PF_SHARECODE/" ${PF_CLIENT_CFG}
+		sed -i "s/LONG/$LONG/" ${PF_CLIENT_CFG}
+	    sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
+	    cat ${PF_CLIENT_CFG}
+	else
+		echo "Missing required Planefinder variable - \$PF_SHARECODE \$LAT \$LONG"
+	fi
 else
-	echo "Error with pfclient configuration"
+	echo "ERROR: No pfclient binary"
 fi
 
 # Allow everything to start before querying
-sleep 10
+sleep 60
 
 while true; do
   date
   systemctl status dump1090-fa.service
   systemctl status piaware.service -l
+  systemctl status pfclient
   sleep 60
 done
