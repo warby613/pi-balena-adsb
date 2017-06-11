@@ -44,9 +44,9 @@ RUN piaware-config allow-auto-updates yes && \
 
 # Download and install Planefinder client
 WORKDIR /tmp
-COPY ./pfclient-config.json /etc/pfclient-config.json
 RUN wget $(wget -qO- https://planefinder.net/sharing/client | egrep armhf.deb | awk -F\" '{print $2}') && \
     dpkg -i pfclient*armhf.deb
+COPY ./pfclient-config.json /etc/pfclient-config.json
 
 WORKDIR /root
 
