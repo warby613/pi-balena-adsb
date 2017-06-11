@@ -1,0 +1,87 @@
+FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+#    build-essential \
+#    apt-utils \
+#    autoconf \
+#    debhelper \
+#    devscripts \
+#    iproute \
+#    itcl3 \
+#    libz-dev \
+#    net-tools \
+#    python-virtualenv \
+#    python3-dev \
+#    tcl-tls \
+#    tcl8.5-dev \
+#    tcllib \
+#    tclx8.4 \
+   wget \
+#    git \
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/*
+
+# Required for:
+# - wget installing application
+
+COPY ./rtlsdr-blacklist.conf /etc/modprobe.d/rtlsdr-blacklist.conf
+
+# Unload the driver module to allow access to dongle
+RUN rmmod dvb_usb_rtl28xxu
+
+
+# piaware (http://flightaware.com)
+# Requires dump1090 on localhost:30005
+
+WORKDIR /tmp
+
+RUN wget http://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_3.5.0_all.deb && \
+    sudo dpkg -i piaware-repository_3.5.0_all.deb && \
+    sudo apt-get update && \
+    sudo apt-get install piaware && \
+    sudo piaware-config allow-auto-updates yes && \
+    sudo piaware-config allow-manual-updates yes && \
+    sudo apt-get install dump1090-fa
+
+
+
+
+#RUN wget $(wget -qO- http://flightaware.com/adsb/piaware/install | egrep wget | awk '{print $3}' | awk -F\< '{print $1}') && \
+#    dpkg -i piaware*.deb
+
+#WORKDIR /tmp
+
+#RUN git clone https://bitbucket.org/inodes/docker-rtlsdr-dump1090-piaware.git
+
+#WORKDIR /tmp/docker-rtlsdr-dump1090-piaware
+
+#RUN apt-get update && apt-get install -y --no-install-recommends \
+#    piaware \
+#    dump1090-fa
+
+# Dump1090 requires username and password
+# This should be supplied by ENV USERNAME and PASSWORD
+
+#COPY piaware_config /root/.piaware
+#COPY start-dump1090-piaware.sh /root/start-dump1090-piaware.sh
+
+#RUN piaware-config allow-auto-updates yes &&\
+#    piaware-config allow-manual-updates yes
+
+#WORKDIR /tmp
+
+
+#RUN git clone https://github.com/tedsluis/dump1090.git && \
+#    cd /tmp/dump1090 && \
+#    make
+
+#WORKDIR /tmp/dump1090
+
+#EXPOSE 80 8080 30001 30002 30003 30004 30005 30104
+
+#CMD ["/root/start-dump1090-piaware.sh"]
+
+# Copy start script
+COPY start.sh ./
+
+CMD ["./start.sh"]
