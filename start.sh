@@ -6,6 +6,10 @@
 # See https://flightaware.com/adsb/piaware/claim for new entries
 # See https://flightaware.com/adsb/piaware/advanced_configuration for options
 #
+# Flightaware is started by systemd
+# - /lib/systemd/system/dump1090-fa.service
+# - /lib/systemd/system/piaware.service
+
 [[ ! -z ${PIAWARE_USERNAME} ]] && /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
 [[ ! -z ${PIAWARE_PASSWORD} ]] && /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
 [[ ! -z ${PIAWARE_MAC} ]]      && /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
@@ -13,19 +17,21 @@
 [[ ! -z ${PPM} ]]              && /usr/bin/piaware-config rtlsdr-ppm ${PPM} || PPM="1"
 
 # Show the Flightaware configuration
+echo "CONFIG: Flightaware"
 /usr/bin/piaware-config -showall
 
 # Unload the driver module to allow access to dongle
 rmmod dvb_usb_rtl28xxu
 
-# Flightaware is started by systemd
-# - /lib/systemd/system/dump1090-fa.service
-# - /lib/systemd/system/piaware.service
+
 
 # ==========================================
 # PLANEFINDER
 # ==========================================
 # See https://planefinder.net/sharing/account
+#
+# Planefinder is started by systemd
+# - /run/systemd/generator.late/pfclient.service
 
 PF_CLIENT="/usr/bin/pfclient"
 PF_CLIENT_CFG="/etc/pfclient-config.json"
@@ -37,16 +43,25 @@ if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CLIENT_CFG} ]]; then
 		sed -i "s/PF_SHARECODE/$PF_SHARECODE/" ${PF_CLIENT_CFG}
 		sed -i "s/LONG/$LONG/" ${PF_CLIENT_CFG}
 	    sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
-	    cat ${PF_CLIENT_CFG}
-	    service pfclient restart
 	else
 		echo "Missing required Planefinder variables - \$PF_SHARECODE \$LAT \$LONG"
 		echo "Connect to http://<your_rpi_ip>:30053 to config and claim a sharecode"
-		\rm -f ${PF_CLIENT_CFG}
 	fi
-else
-	echo "ERROR: No pfclient binary"
+	# Show the Planefinder configuration
+	echo "CONFIG: Planefinder"
+	cat ${PF_CLIENT_CFG}
+	service pfclient restart
 fi
+
+# ==========================================
+# FLIGHTRADAR24
+# ==========================================
+
+
+
+
+
+
 
 # Allow everything to start before querying
 sleep 60
