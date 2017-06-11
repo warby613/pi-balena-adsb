@@ -38,6 +38,7 @@ if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CLIENT_CFG} ]]; then
 		sed -i "s/LONG/$LONG/" ${PF_CLIENT_CFG}
 	    sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
 	    cat ${PF_CLIENT_CFG}
+	    service pfclient restart
 	else
 		echo "Missing required Planefinder variables - \$PF_SHARECODE \$LAT \$LONG"
 		echo "Connect to http://<your_rpi_ip>:30053 to config and claim a sharecode"
