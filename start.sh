@@ -39,7 +39,9 @@ if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CLIENT_CFG} ]]; then
 	    sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
 	    cat ${PF_CLIENT_CFG}
 	else
-		echo "Missing required Planefinder variable - \$PF_SHARECODE \$LAT \$LONG"
+		echo "Missing required Planefinder variables - \$PF_SHARECODE \$LAT \$LONG"
+		echo "Connect to http://<your_rpi_ip>:30053 to config and claim a sharecode"
+		\rm -f ${PF_CLIENT_CFG}
 	fi
 else
 	echo "ERROR: No pfclient binary"
@@ -50,8 +52,8 @@ sleep 60
 
 while true; do
   date
-  systemctl status dump1090-fa.service
+  systemctl status dump1090-fa.service -l
   systemctl status piaware.service -l
-  systemctl status pfclient
+  systemctl status pfclient -l
   sleep 60
 done
