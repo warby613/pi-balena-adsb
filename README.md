@@ -7,6 +7,7 @@ This Repository was created to push config to multiple Raspberry Pi's connected 
 * Allows management of multiple IoT devices running Docker. 
 * Can manage multiple Raspberry Pi devices using a single Dockerfile template and variables on an application and device level.
 * [Learn More](https://resin.io/)
+* [Signup](https://dashboard.resin.io/signup)
 
 ### Flightaware? ###
 
