@@ -3,6 +3,7 @@ FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
 # Allow systemd to run - this is required for piaware and dump1090-fa
 ENV INITSYSTEM on
 
+# Basic packages installed to allow build and install of Flightaware etc.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
     build-essential \
@@ -21,30 +22,30 @@ COPY ./rtlsdr-blacklist.conf /etc/modprobe.d/rtlsdr-blacklist.conf
 # Install driver for RTL-SDR DVB-T Dongle
 WORKDIR /tmp
 
+# Clone, compile and install RTL-SDR Drivers
 RUN git clone git://git.osmocom.org/rtl-sdr.git \
     && cd rtl-sdr \
     && mkdir build
-
 WORKDIR /tmp/rtl-sdr/build
 RUN cmake ../ -DINSTALL_UDEV_RULES=ON -DDETACH_KERNEL_DRIVER=ON \
     && make \
     && make install \
     && ldconfig
 
-#RUN rmmod dvb_usb_rtl28xxu
-
 # Install piaware - https://flightaware.com/adsb/piaware/install
 WORKDIR /tmp
-
 RUN wget http://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_3.5.0_all.deb && \
     dpkg -i piaware-repository_3.5.0_all.deb
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     piaware \
     dump1090-fa
-
 RUN piaware-config allow-auto-updates yes && \
     piaware-config allow-manual-updates yes
+
+# Download and install Planefinder client
+WORKDIR /tmp
+RUN wget $(wget -qO- https://planefinder.net/sharing/client | egrep armhf.deb | awk -F\" '{print $2}') && \
+    dpkg -i pfclient*armhf.deb
 
 WORKDIR /root
 
