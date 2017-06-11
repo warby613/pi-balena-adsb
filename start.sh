@@ -1,12 +1,10 @@
 #!/bin/bash
 
-env > out.txt
-env
-
 # Configure Flightaware
 #
 # See https://flightaware.com/adsb/piaware/claim for new entries
 # See https://flightaware.com/adsb/piaware/advanced_configuration for options
+#
 [[ ! -z ${PIAWARE_USERNAME} ]] && /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
 [[ ! -z ${PIAWARE_PASSWORD} ]] && /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
 [[ ! -z ${PIAWARE_MAC} ]]      && /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
@@ -23,11 +21,9 @@ rmmod dvb_usb_rtl28xxu
 # - /lib/systemd/system/dump1090-fa.service
 # - /lib/systemd/system/piaware.service
 
-sleep 10
-
-while : ; do
+while true; do
+  sleep 60
   date
   systemctl status dump1090-fa.service
   systemctl status piaware.service -l
-  sleep 60
 done
