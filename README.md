@@ -1,4 +1,4 @@
-# Resin.io Repository for Flightaware + Raspberry Pi #
+# Resin.io Repository for Crowdsourced ADSB + Raspberry Pi #
 
 This Repository was created to push config to multiple Raspberry Pi's connected to Resin.io to push ADSB data to Flightaware from multiple Raspberry Pi's.
 
