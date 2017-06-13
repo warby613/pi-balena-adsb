@@ -21,10 +21,17 @@ echo ------------------------------------------
 [[ ! -z ${PIAWARE_MAC} ]]      && /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
 [[ ! -z ${GAIN} ]]             && /usr/bin/piaware-config rtlsdr-gain ${GAIN} || GAIN="-10"
 [[ ! -z ${PPM} ]]              && /usr/bin/piaware-config rtlsdr-ppm ${PPM} || PPM="1"
+PIAWARE_CFG="/usr/bin/piaware-config"
 
-# Show the Flightaware configuration
-echo "CONFIG: Flightaware"
-/usr/bin/piaware-config -showall
+if [[ -x ${PIAWARE_CFG} ]] && \
+   [[ ! -z ${PIAWARE_USERNAME} ]] && \
+   [[ ! -z ${PIAWARE_PASSWORD} ]]; then
+	# Show the Flightaware configuration
+	echo "CONFIG: Flightaware"
+	/usr/bin/piaware-config -showall
+else
+	echo "Missing Flightaware"
+fi
 
 # Unload the driver module to allow access to dongle
 rmmod dvb_usb_rtl28xxu
