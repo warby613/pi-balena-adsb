@@ -21,19 +21,19 @@ echo ------------------------------------------
 [[ ! -z ${PPM} ]]              && /usr/bin/piaware-config rtlsdr-ppm ${PPM} || PPM="1"
 [[ ! -z ${PIAWARE_ID} ]]       && /usr/bin/piaware-config feeder-id ${PIAWARE_ID}
 
-if [[ ! -z ${PIAWARE_USERNAME} ]] && [[ -z {PIAWARE_ID} ]]; then
+if [[ ! -z ${PIAWARE_USERNAME} ]] && [[ -z ${PIAWARE_ID} ]]; then
     echo "WARNING: flightaware-user has been deprecated."
     /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
     DEPRECATED=1
 fi
 
-if [[ ! -z ${PIAWARE_PASSWORD} ]] && [[ -z {PIAWARE_ID} ]]; then
+if [[ ! -z ${PIAWARE_PASSWORD} ]] && [[ -z ${PIAWARE_ID} ]]; then
     echo "WARNING: flightaware-password has been deprecated."
     /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
     DEPRECATED=1
 fi
 
-if [[ ! -z ${PIAWARE_MAC} ]] && [[ -z {PIAWARE_ID} ]]; then
+if [[ ! -z ${PIAWARE_MAC} ]] && [[ -z ${PIAWARE_ID} ]]; then
     echo "WARNING: force-macaddress has been deprecated."
     /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
     DEPRECATED=1
