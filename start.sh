@@ -16,6 +16,16 @@ echo ------------------------------------------
 echo FLIGHTAWARE / PIAWARE
 echo ------------------------------------------
 
+deprecated()
+{
+    echo "==============================================================================================================="
+    echo "DEPRECATED:"
+    echo "Flightaware has deprecated user credentials and forced MAC address with feeder-id"
+    echo "For a first time installation connect your device to your local network without PIAWARE variables in Resin.io"
+    echo "Then look for new device on https://flightaware.com/adsb/piaware/claim"
+    echo "Once a device has been claimed insert this into device variable PIAWARE_ID"
+    echo "==============================================================================================================="
+}
 
 [[ ! -z ${GAIN} ]]             && /usr/bin/piaware-config rtlsdr-gain ${GAIN} || GAIN="-10"
 [[ ! -z ${PPM} ]]              && /usr/bin/piaware-config rtlsdr-ppm ${PPM} || PPM="1"
@@ -39,13 +49,7 @@ if [[ ! -z ${PIAWARE_MAC} ]] && [[ -z ${PIAWARE_ID} ]]; then
     DEPRECATED=1
 fi
 
-if (( $DEPRECATED )); then
-    echo "Flightaware has deprecated user credentials and forced MAC address with feeder-id"
-    echo "For a first time installation connect your device to your local network without PIAWARE variables in Resin.io"
-    echo "Then look for new device on https://flightaware.com/adsb/piaware/claim"
-    echo "Once a device has been claimed insert this into device variable PIAWARE_ID"
-fi
-
+(( $DEPRECATED )) && deprecated
 
 PIAWARE_CFG="/usr/bin/piaware-config"
 if [[ -x ${PIAWARE_CFG} ]]; then
@@ -133,5 +137,6 @@ while true; do
   systemctl status piaware.service -l
   systemctl status pfclient -l
   systemctl status fr24feed -l
+  (( $DEPRECATED )) && deprecated
   sleep 60
 done
