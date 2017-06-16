@@ -26,11 +26,11 @@ PIAWARE_CFG="/usr/bin/piaware-config"
 if [[ -x ${PIAWARE_CFG} ]] && \
    [[ ! -z ${PIAWARE_USERNAME} ]] && \
    [[ ! -z ${PIAWARE_PASSWORD} ]]; then
-	# Show the Flightaware configuration
-	echo "CONFIG: Flightaware"
-	/usr/bin/piaware-config -showall
+    # Show the Flightaware configuration
+    echo "CONFIG: Flightaware"
+    /usr/bin/piaware-config -showall
 else
-	echo "Missing Flightaware"
+    echo "Missing Flightaware"
 fi
 
 # Unload the driver module to allow access to dongle
@@ -54,21 +54,21 @@ PF_CLIENT="/usr/bin/pfclient"
 PF_CLIENT_CFG="/etc/pfclient-config.json"
 
 if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CLIENT_CFG} ]]; then
-	if [[ ! -z ${PF_SHARECODE} ]] && \
-	   [[ ! -z ${LONG} ]] && \
-	   [[ ! -z ${LAT} ]]; then
-		sed -i "s/PF_SHARECODE/$PF_SHARECODE/" ${PF_CLIENT_CFG}
-		sed -i "s/LONG/$LONG/" ${PF_CLIENT_CFG}
-	    sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
-	else
-		echo "Missing required Planefinder variables - \$PF_SHARECODE \$LAT \$LONG"
-		echo "Connect to http://<your_rpi_ip>:30053 to config and claim a sharecode"
-		echo "Add variable PF_SHARECODE to Resin.io device variables once claimed."
-	fi
-	# Show the Planefinder configuration
-	echo "CONFIG: Planefinder"
-	cat ${PF_CLIENT_CFG}
-	service pfclient restart
+    if [[ ! -z ${PF_SHARECODE} ]] && \
+       [[ ! -z ${LONG} ]] && \
+       [[ ! -z ${LAT} ]]; then
+        sed -i "s/PF_SHARECODE/$PF_SHARECODE/" ${PF_CLIENT_CFG}
+        sed -i "s/LONG/$LONG/" ${PF_CLIENT_CFG}
+        sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
+    else
+        echo "Missing required Planefinder variables - \$PF_SHARECODE \$LAT \$LONG"
+        echo "Connect to http://<your_rpi_ip>:30053 to config and claim a sharecode"
+        echo "Add variable PF_SHARECODE to Resin.io device variables once claimed."
+    fi
+    # Show the Planefinder configuration
+    echo "CONFIG: Planefinder"
+    cat ${PF_CLIENT_CFG}
+    service pfclient restart
 fi
 
 # ==========================================
@@ -86,19 +86,19 @@ echo FLIGHTRADAR24
 echo ------------------------------------------
 
 if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
-	if [[ ! -z ${FR24_KEY} ]] && \
-	   [[ ! -z ${LONG} ]] && \
-	   [[ ! -z ${LAT} ]]; then
-		echo fr24key=\"$FR24_KEY\" >> ${FR24_CLIENT_CFG}
-	else
-		echo "Missing required Flightradar24 variables - \$FR24_KEY \$LAT \$LONG"
-		echo "Connect Resin.io terminal and run /usr/bin/fr24feed --signup to get a sharecode"
-		echo "Add variable FR24_KEY to Resin.io device variables once signed up."
-	fi
-	# Show the Planefinder configuration
-	echo "CONFIG: Flightradar24"
-	cat ${FR24_CLIENT_CFG}
-	service fr24feed restart
+    if [[ ! -z ${FR24_KEY} ]] && \
+       [[ ! -z ${LONG} ]] && \
+       [[ ! -z ${LAT} ]]; then
+        echo fr24key=\"$FR24_KEY\" >> ${FR24_CLIENT_CFG}
+    else
+        echo "Missing required Flightradar24 variables - \$FR24_KEY \$LAT \$LONG"
+        echo "Connect Resin.io terminal and run /usr/bin/fr24feed --signup to get a sharecode"
+        echo "Add variable FR24_KEY to Resin.io device variables once signed up."
+    fi
+    # Show the Planefinder configuration
+    echo "CONFIG: Flightradar24"
+    cat ${FR24_CLIENT_CFG}
+    service fr24feed restart
 fi
 
 # Allow everything to start before querying
