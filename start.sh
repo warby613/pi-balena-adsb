@@ -43,7 +43,7 @@ if [[ ! -z ${PIAWARE_PASSWORD} ]] && [[ -z ${PIAWARE_ID} ]]; then
     DEPRECATED=1
 fi
 
-if [[ ! -z ${PIAWARE_MAC} ]] && [[ -z ${PIAWARE_ID} ]]; then
+if [[ ! -z ${PIAWARE_MAC} ]]; then
     echo "WARNING: force-macaddress has been deprecated."
     /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
     DEPRECATED=1
