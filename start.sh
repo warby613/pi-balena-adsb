@@ -1,16 +1,64 @@
 #!/bin/bash
 
 # ==========================================
-# FLIGHTAWARE / PIAWARE
+# ADSB Resin Dockerfile script
+#
+# Author: Glenn Stewart <gstewart@atlassian.com>
+# Reference: https://bitbucket.org/inodes/resin-docker-rtlsdr
+#
+# This script should be used in conjunction with Resin.io and Raspberry Pi + RTL_SDR Dongles
 # ==========================================
-# See https://flightaware.com/adsb/piaware/claim for new entries
-# See https://flightaware.com/adsb/piaware/advanced_configuration for options
-#
-# Feed Status: https://flightaware.com/adsb/stats/user/${PIAWARE_USERNAME}
-#
-# Flightaware is started by systemd
-# - /lib/systemd/system/dump1090-fa.service
-# - /lib/systemd/system/piaware.service
+
+
+# ==========================================
+# ERROR FUNCTIONS
+# ==========================================
+
+missing()
+{
+    echo "------------------------------------------"
+    echo "MISSING VARIABLES:"
+    echo "ERROR: Check the following variables are set in Resin:"
+    echo "LAT: Your lattitude"
+    echo "LONG: Your longitude"
+    echo "Use https://mycurrentlocation.net/ to find your location then set in Resin"
+    echo "------------------------------------------"
+}
+
+deprecated()
+{
+    echo "------------------------------------------"
+    echo "DEPRECATED:"
+    echo "Flightaware has deprecated user credentials and forced MAC address with feeder-id"
+    echo "For a first time installation connect your device to your local network without PIAWARE variables in Resin.io"
+    echo "Then look for new device on https://flightaware.com/adsb/piaware/claim"
+    echo "Once a device has been claimed insert this into device variable PIAWARE_ID"
+    echo "------------------------------------------"
+}
+
+planefinder_error()
+{
+    echo "------------------------------------------"
+    echo "PLANEFINDER ERROR"
+    echo "Missing required Planefinder variables - \$PF_SHARECODE \$LAT \$LONG"
+    echo "Connect to http://<your_rpi_ip>:30053 to config and claim a sharecode"
+    echo "Add variable PF_SHARECODE to Resin.io device variables once claimed."
+    echo "------------------------------------------"
+}
+
+flightradar24_error()
+{
+    echo "------------------------------------------"
+    echo "FLIGHTRADAR24 ERROR"
+    echo "Missing required Flightradar24 variables - \$FR24_KEY \$LAT \$LONG"
+    echo "Connect Resin.io terminal and run /usr/bin/fr24feed --signup to get a sharecode"
+    echo "Add variable FR24_KEY to Resin.io device variables once signed up."
+    echo "------------------------------------------"
+}
+
+# ==========================================
+# GENERIC
+# ==========================================
 
 echo ------------------------------------------
 echo GENERIC VARIABLES
@@ -22,34 +70,26 @@ if [[ -z ${LAT} ]] || \
     MISSING=1
 fi
 
-missing()
-{
-    echo ------------------------------------------
-    echo MISSING VARIABLES
-    echo "ERROR: Check the following variables are set in Resin:"
-    echo "LAT: Your lattitude"
-    echo "LONG: Your longitude"
-    echo "Use https://mycurrentlocation.net/ to find your location then set in Resin"
-    echo ------------------------------------------
-}
-
 (( $MISSING )) && missing
+
+# ==========================================
+# FLIGHTAWARE / PIAWARE
+# ==========================================
+# See https://flightaware.com/adsb/piaware/claim for new entries
+# See https://flightaware.com/adsb/piaware/advanced_configuration for options
+#
+# Feed Status: https://flightaware.com/adsb/stats/user/${PIAWARE_USERNAME}
+#
+# Flightaware is started by systemd
+# - /lib/systemd/system/dump1090-fa.service
+# - /lib/systemd/system/piaware.service
 
 echo
 echo ------------------------------------------
 echo FLIGHTAWARE / PIAWARE
 echo ------------------------------------------
 
-deprecated()
-{
-    echo "==============================================================================================================="
-    echo "DEPRECATED:"
-    echo "Flightaware has deprecated user credentials and forced MAC address with feeder-id"
-    echo "For a first time installation connect your device to your local network without PIAWARE variables in Resin.io"
-    echo "Then look for new device on https://flightaware.com/adsb/piaware/claim"
-    echo "Once a device has been claimed insert this into device variable PIAWARE_ID"
-    echo "==============================================================================================================="
-}
+
 
 [[ ! -z ${GAIN} ]]             && /usr/bin/piaware-config rtlsdr-gain ${GAIN} || GAIN="-10"
 [[ ! -z ${PPM} ]]              && /usr/bin/piaware-config rtlsdr-ppm ${PPM} || PPM="1"
@@ -72,17 +112,6 @@ if [[ ! -z ${PIAWARE_MAC} ]]; then
     /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
     DEPRECATED=1
 fi
-
-deprecated()
-{
-    echo ------------------------------------------
-    echo DEPRECATED
-    echo "Flightaware has deprecated user credentials and forced MAC address with feeder-id"
-    echo "For a first time installation connect your device to your local network without PIAWARE variables in Resin.io"
-    echo "Then look for new device on https://flightaware.com/adsb/piaware/claim"
-    echo "Once a device has been claimed insert this into device variable PIAWARE_ID"   
-    echo ------------------------------------------
-}
 
 (( $DEPRECATED )) && deprecated
 
@@ -124,9 +153,7 @@ if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CLIENT_CFG} ]]; then
         sed -i "s/LONG/$LONG/" ${PF_CLIENT_CFG}
         sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
     else
-        echo "Missing required Planefinder variables - \$PF_SHARECODE \$LAT \$LONG"
-        echo "Connect to http://<your_rpi_ip>:30053 to config and claim a sharecode"
-        echo "Add variable PF_SHARECODE to Resin.io device variables once claimed."
+        planefinder_error
     fi
     # Show the Planefinder configuration
     echo "CONFIG: Planefinder"
@@ -155,9 +182,7 @@ if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
        [[ ! -z ${LAT} ]]; then
         echo fr24key=\"$FR24_KEY\" >> ${FR24_CLIENT_CFG}
     else
-        echo "Missing required Flightradar24 variables - \$FR24_KEY \$LAT \$LONG"
-        echo "Connect Resin.io terminal and run /usr/bin/fr24feed --signup to get a sharecode"
-        echo "Add variable FR24_KEY to Resin.io device variables once signed up."
+        flightradar24_error
     fi
     # Show the Planefinder configuration
     echo "CONFIG: Flightradar24"
@@ -176,5 +201,6 @@ while true; do
   systemctl status fr24feed -l
   (( $DEPRECATED )) && deprecated
   (( $MISSING )) && missing
+  echo "Reference: https://bitbucket.org/inodes/resin-docker-rtlsdr"
   sleep 60
 done
