@@ -3,10 +3,11 @@ FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
 # Dockerfile Template for Resin.io RTL-SDR Application
 #
 # Author: Glenn Stewart <gstewart@atlassian.com>
+#
 # http://www.yssyforum.net/board/showthread.php?t=11523
 # https://bitbucket.org/inodes/resin-docker-rtlsdr 
 
-# Allow systemd to run - this is required for piaware and dump1090-fa
+# Allow systemd to run - this is required for piaware, dump1090, pfclient and fr24feed
 ENV INITSYSTEM on
 
 # Basic packages installed to allow build and install of Flightaware etc.
@@ -40,8 +41,8 @@ RUN cmake ../ -DINSTALL_UDEV_RULES=ON -DDETACH_KERNEL_DRIVER=ON \
 
 # Install piaware - https://flightaware.com/adsb/piaware/install
 WORKDIR /tmp
-RUN wget http://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_3.5.0_all.deb && \
-    dpkg -i piaware-repository_3.5.0_all.deb
+RUN $(wget -qO- https://flightaware.com/adsb/piaware/install | egrep "language-sh" | cut -d\> -f2 | cut -d\< -f1 | egrep ^wget) && \
+    dpkg -i piaware*.deb
 RUN apt-get update && apt-get install -y --no-install-recommends \
     piaware \
     dump1090-fa
