@@ -201,6 +201,9 @@ while true; do
   systemctl status fr24feed -l
   (( $DEPRECATED )) && deprecated
   (( $MISSING )) && missing
-  echo "Reference: https://bitbucket.org/inodes/resin-docker-rtlsdr"
+  echo "------------------------------------------"
+  echo "Help and FAQ:"
+  echo "https://bitbucket.org/inodes/resin-docker-rtlsdr"
+  echo "------------------------------------------"
   sleep 60
 done
