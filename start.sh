@@ -34,25 +34,36 @@ missing()
 echo ------------------------------------------
 echo FLIGHTAWARE / PIAWARE
 echo ------------------------------------------
+echo
 
+deprecated()
+{
+    echo "==============================================================================================================="
+    echo "DEPRECATED:"
+    echo "Flightaware has deprecated user credentials and forced MAC address with feeder-id"
+    echo "For a first time installation connect your device to your local network without PIAWARE variables in Resin.io"
+    echo "Then look for new device on https://flightaware.com/adsb/piaware/claim"
+    echo "Once a device has been claimed insert this into device variable PIAWARE_ID"
+    echo "==============================================================================================================="
+}
 
 [[ ! -z ${GAIN} ]]             && /usr/bin/piaware-config rtlsdr-gain ${GAIN} || GAIN="-10"
 [[ ! -z ${PPM} ]]              && /usr/bin/piaware-config rtlsdr-ppm ${PPM} || PPM="1"
 [[ ! -z ${PIAWARE_ID} ]]       && /usr/bin/piaware-config feeder-id ${PIAWARE_ID}
 
-if [[ ! -z ${PIAWARE_USERNAME} ]] && [[ -z {PIAWARE_ID} ]]; then
+if [[ ! -z ${PIAWARE_USERNAME} ]] && [[ -z ${PIAWARE_ID} ]]; then
     echo "WARNING: flightaware-user has been deprecated."
     /usr/bin/piaware-config flightaware-user ${PIAWARE_USERNAME}
     DEPRECATED=1
 fi
 
-if [[ ! -z ${PIAWARE_PASSWORD} ]] && [[ -z {PIAWARE_ID} ]]; then
+if [[ ! -z ${PIAWARE_PASSWORD} ]] && [[ -z ${PIAWARE_ID} ]]; then
     echo "WARNING: flightaware-password has been deprecated."
     /usr/bin/piaware-config flightaware-password ${PIAWARE_PASSWORD}
     DEPRECATED=1
 fi
 
-if [[ ! -z ${PIAWARE_MAC} ]] && [[ -z {PIAWARE_ID} ]]; then
+if [[ ! -z ${PIAWARE_MAC} ]]; then
     echo "WARNING: force-macaddress has been deprecated."
     /usr/bin/piaware-config force-macaddress ${PIAWARE_MAC}
     DEPRECATED=1
@@ -68,6 +79,8 @@ deprecated()
     echo "Once a device has been claimed insert this into device variable PIAWARE_ID"   
     echo ------------------------------------------
 }
+
+(( $DEPRECATED )) && deprecated
 
 PIAWARE_CFG="/usr/bin/piaware-config"
 if [[ -x ${PIAWARE_CFG} ]]; then
@@ -94,6 +107,7 @@ rmmod dvb_usb_rtl28xxu
 echo ------------------------------------------
 echo PLANEFINDER
 echo ------------------------------------------
+echo
 
 PF_CLIENT="/usr/bin/pfclient"
 PF_CLIENT_CFG="/etc/pfclient-config.json"
@@ -129,6 +143,7 @@ FR24_CLIENT_CFG="/etc/fr24feed.ini"
 echo ------------------------------------------
 echo FLIGHTRADAR24
 echo ------------------------------------------
+echo
 
 if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
     if [[ ! -z ${FR24_KEY} ]] && \
