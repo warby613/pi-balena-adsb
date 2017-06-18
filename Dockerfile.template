@@ -1,5 +1,11 @@
 FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
 
+# Dockerfile Template for Resin.io RTL-SDR Application
+#
+# Author: Glenn Stewart <gstewart@atlassian.com>
+# http://www.yssyforum.net/board/showthread.php?t=11523
+# https://bitbucket.org/inodes/resin-docker-rtlsdr 
+
 # Allow systemd to run - this is required for piaware and dump1090-fa
 ENV INITSYSTEM on
 

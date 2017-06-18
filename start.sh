@@ -13,6 +13,25 @@
 # - /lib/systemd/system/piaware.service
 
 echo ------------------------------------------
+echo GENERIC VARIABLES
+echo ------------------------------------------
+if [[ -z ${LAT} ]] || \
+   [[ -z {LONG} ]]; then
+    MISSING=1
+fi
+
+missing()
+{
+    echo ------------------------------------------
+    echo MISSING VARIABLES
+    echo "ERROR: Check the following variables are set in Resin:"
+    echo "LAT: Your lattitude"
+    echo "LONG: Your longitude"
+    echo "Use https://mycurrentlocation.net/ to find your location then set in Resin"
+    echo ------------------------------------------
+}
+
+echo ------------------------------------------
 echo FLIGHTAWARE / PIAWARE
 echo ------------------------------------------
 
@@ -39,13 +58,16 @@ if [[ ! -z ${PIAWARE_MAC} ]] && [[ -z {PIAWARE_ID} ]]; then
     DEPRECATED=1
 fi
 
-if (( $DEPRECATED )); then
+deprecated()
+{
+    echo ------------------------------------------
+    echo DEPRECATED
     echo "Flightaware has deprecated user credentials and forced MAC address with feeder-id"
     echo "For a first time installation connect your device to your local network without PIAWARE variables in Resin.io"
     echo "Then look for new device on https://flightaware.com/adsb/piaware/claim"
-    echo "Once a device has been claimed insert this into device variable PIAWARE_ID"
-fi
-
+    echo "Once a device has been claimed insert this into device variable PIAWARE_ID"   
+    echo ------------------------------------------
+}
 
 PIAWARE_CFG="/usr/bin/piaware-config"
 if [[ -x ${PIAWARE_CFG} ]]; then
@@ -133,5 +155,7 @@ while true; do
   systemctl status piaware.service -l
   systemctl status pfclient -l
   systemctl status fr24feed -l
+  (( $DEPRECATED )) && deprecated
+  (( $MISSING )) && missing
   sleep 60
 done
