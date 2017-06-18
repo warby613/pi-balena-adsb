@@ -35,10 +35,10 @@ missing()
 
 (( $MISSING )) && missing
 
+echo
 echo ------------------------------------------
 echo FLIGHTAWARE / PIAWARE
 echo ------------------------------------------
-echo
 
 deprecated()
 {
@@ -108,10 +108,10 @@ rmmod dvb_usb_rtl28xxu
 # Planefinder is started by systemd
 # - /run/systemd/generator.late/pfclient.service
 
+echo
 echo ------------------------------------------
 echo PLANEFINDER
 echo ------------------------------------------
-echo
 
 PF_CLIENT="/usr/bin/pfclient"
 PF_CLIENT_CFG="/etc/pfclient-config.json"
@@ -144,10 +144,10 @@ fi
 FR24_CLIENT="/usr/bin/fr24feed"
 FR24_CLIENT_CFG="/etc/fr24feed.ini"
 
+echo
 echo ------------------------------------------
 echo FLIGHTRADAR24
 echo ------------------------------------------
-echo
 
 if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
     if [[ ! -z ${FR24_KEY} ]] && \
