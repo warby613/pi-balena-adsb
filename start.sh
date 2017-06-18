@@ -195,6 +195,9 @@ sleep 60
 
 while true; do
   date
+  echo "------------------------------------------"
+  echo "STATUS"
+  echo "------------------------------------------"
   systemctl status dump1090-fa.service -l
   systemctl status piaware.service -l
   systemctl status pfclient -l
@@ -202,8 +205,8 @@ while true; do
   (( $DEPRECATED )) && deprecated
   (( $MISSING )) && missing
   echo "------------------------------------------"
-  echo "Help and FAQ:"
-  echo "https://bitbucket.org/inodes/resin-docker-rtlsdr"
+  echo "Repository: https://bitbucket.org/inodes/resin-docker-rtlsdr"
+  echo "Log issues: https://bitbucket.org/inodes/resin-docker-rtlsdr/issues/new"
   echo "------------------------------------------"
   sleep 60
 done
