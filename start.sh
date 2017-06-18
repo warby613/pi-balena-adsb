@@ -15,6 +15,8 @@
 echo ------------------------------------------
 echo GENERIC VARIABLES
 echo ------------------------------------------
+env
+
 if [[ -z ${LAT} ]] || \
    [[ -z {LONG} ]]; then
     MISSING=1
@@ -30,6 +32,8 @@ missing()
     echo "Use https://mycurrentlocation.net/ to find your location then set in Resin"
     echo ------------------------------------------
 }
+
+(( $MISSING )) && missing
 
 echo ------------------------------------------
 echo FLIGHTAWARE / PIAWARE
