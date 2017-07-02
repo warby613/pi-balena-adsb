@@ -120,8 +120,6 @@ if [[ -x ${PIAWARE_CFG} ]]; then
     # Show the Flightaware configuration
     echo "CONFIG: Flightaware"
     /usr/bin/piaware-config -showall
-else
-    echo "Missing Flightaware"
 fi
 
 # Unload the driver module to allow access to dongle
@@ -187,7 +185,8 @@ if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
     # Show the Planefinder configuration
     echo "CONFIG: Flightradar24"
     cat ${FR24_CLIENT_CFG}
-    service fr24feed restart
+    service fr24feed stop
+    service fr24feed start
 fi
 
 # Allow everything to start before querying
@@ -202,6 +201,7 @@ while true; do
   systemctl status piaware.service -l
   systemctl status pfclient -l
   systemctl status fr24feed -l
+  
   (( $DEPRECATED )) && deprecated
   (( $MISSING )) && missing
   echo "------------------------------------------"
