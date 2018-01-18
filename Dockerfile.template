@@ -1,3 +1,4 @@
+# vi:syntax=dockerfile
 FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
 
 # Dockerfile Template for Resin.io RTL-SDR Application
