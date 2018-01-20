@@ -211,6 +211,9 @@ if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
    echo "ADSBExchange Feed Name: ${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}"
    echo port=\"${ADSBEXCHANGE_PORT:=30004}\" > ${ADSBEXCHANGE_CLIENT_CFG}
    echo name=\"${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+   echo lat=\"$LAT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+   echo long=\"$LONG\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+   echo alt=\"$ALT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
    service adsbexchange stop
    service adsbexchange start
 fi
