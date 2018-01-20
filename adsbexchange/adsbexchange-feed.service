@@ -16,7 +16,7 @@ ExecReload=/bin/kill -HUP $MAINPID
 Type=simple
 Restart=on-failure
 RestartSec=30
-RestartPreventExitStatus=1 -1
+RestartPreventExitStatus=1
 
 [Install]
 WantedBy=adsbexchange.service
