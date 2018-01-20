@@ -7,7 +7,7 @@
 Description=ADSBexchange ADS-B uploader
 Documentation=https://www.adsbexchange.com/how-to-feed/
 Wants=network-online.target
-After=network-online.target time-sync.target
+After=dump1090-fa.service network-online.target time-sync.target
 
 [Service]
 ExecStart=/bin/true
