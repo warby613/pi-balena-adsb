@@ -207,13 +207,14 @@ echo ------------------------------------------
 
 if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
    echo "CONFIG: ADSBExchange"
-   echo "ADSBExchange Feed Port: ${ADSBEXCHANGE_PORT:=30004}"
-   echo "ADSBExchange Feed Name: ${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}"
    echo port=\"${ADSBEXCHANGE_PORT:=30004}\" > ${ADSBEXCHANGE_CLIENT_CFG}
    echo name=\"${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}\" >> ${ADSBEXCHANGE_CLIENT_CFG}
    echo lat=\"$LAT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
    echo long=\"$LONG\" >> ${ADSBEXCHANGE_CLIENT_CFG}
    echo alt=\"$ALT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+   cat ${ADSBEXCHANGE_CLIENT.CFG}
+   systemctl enable adsbexchange-feed
+   systemctl enable adsbexchange-mlat
    service adsbexchange stop
    service adsbexchange start
 fi
