@@ -2,4 +2,7 @@
 
 source /home/adsbexchange/adsbexchange.cfg
 
-/usr/bin/socat TCP:localhost:30005 TCP:feed.adsbexchange.com:${port}
+while true; do
+  /usr/bin/socat TCP:localhost:30005 TCP:feed.adsbexchange.com:${port}
+  sleep 5
+done
