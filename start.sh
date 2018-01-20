@@ -190,6 +190,32 @@ if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
     service fr24feed start
 fi
 
+# ==========================================
+# ADSBEXCHANGE
+# ==========================================
+# See https://www.adsbexchange.com/how-to-feed/ 
+#
+
+ADSBEXCHANGE_CLIENT="/home/adsbexchange/adsbexchange-feed.sh"
+ADSBEXCHANGE_MLAT_CLIENT="/home/adsbexchange/adsbexchange-mlat.sh"
+
+echo
+echo ------------------------------------------
+echo ADSBEXCHANGE
+echo ------------------------------------------
+
+if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
+   echo "CONFIG: ADSBExchange"
+   echo "ADSBExchange Feed Port: ${ADSBEXCHANGE_PORT:=30004}"
+   if [[ -z ${ADSBEXCHANGE_NAME} ]]; then
+     echo "ADSBExchange Feed Name: ${ADSBEXCHANGE_NAME}"
+   else
+     echo "ADSBExchange Feed Name: ${RESIN_DEVICE_UUID}"
+   fi
+    service adsbexchange stop
+    service adsbexchange start
+fi
+
 # Allow everything to start before querying
 sleep 60
 
@@ -202,6 +228,7 @@ while true; do
   systemctl status piaware.service -l
   systemctl status pfclient -l
   systemctl status fr24feed -l
+  systemctl status adsbexchange -l
   
   (( $DEPRECATED )) && deprecated
   (( $MISSING )) && missing

@@ -1,0 +1,18 @@
+# adsbexchange service for systemd
+
+# upload data to adsbexchange
+# install in /etc/systemd/system
+
+[Unit]
+Description=ADSBexchange ADS-B uploader
+Documentation=https://www.adsbexchange.com/how-to-feed/
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+ExecStart=/bin/true
+RemainAfterExit=yes
+Type=oneshot
+
+[Install]
+WantedBy=default.target
