@@ -198,6 +198,7 @@ fi
 
 ADSBEXCHANGE_CLIENT="/home/adsbexchange/adsbexchange-feed.sh"
 ADSBEXCHANGE_MLAT_CLIENT="/home/adsbexchange/adsbexchange-mlat.sh"
+ADSBEXCHANGE_CLIENT_CFG="/home/adsbexchange/adsbexchange.cfg"
 
 echo
 echo ------------------------------------------
@@ -208,6 +209,8 @@ if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
    echo "CONFIG: ADSBExchange"
    echo "ADSBExchange Feed Port: ${ADSBEXCHANGE_PORT:=30004}"
    echo "ADSBExchange Feed Name: ${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}"
+   echo port=\"${ADSBEXCHANGE_PORT:=30004}\" > ${ADSBEXCHANGE_CLIENT_CFG}
+   echo name=\"${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}\" >> ${ADSBEXCHANGE_CLIENT_CFG}
    service adsbexchange stop
    service adsbexchange start
 fi
