@@ -25,7 +25,4 @@ dpkg -i mlat-client_${MLATCLIENTVERSION}*.deb
 mv adsbexchange.service /etc/systemd/system
 mv adsbexchange-feed.service /etc/systemd/system
 mv adsbexchange-mlat.service /etc/systemd/system
-servicectl enable adsbexchange-feed
-servicectl enable adsbexchange-mlat
-
 exit 0
