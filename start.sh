@@ -207,13 +207,9 @@ echo ------------------------------------------
 if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
    echo "CONFIG: ADSBExchange"
    echo "ADSBExchange Feed Port: ${ADSBEXCHANGE_PORT:=30004}"
-   if [[ -z ${ADSBEXCHANGE_NAME} ]]; then
-     echo "ADSBExchange Feed Name: ${ADSBEXCHANGE_NAME}"
-   else
-     echo "ADSBExchange Feed Name: ${RESIN_DEVICE_UUID}"
-   fi
-    service adsbexchange stop
-    service adsbexchange start
+   echo "ADSBExchange Feed Name: ${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}
+   service adsbexchange stop
+   service adsbexchange start
 fi
 
 # Allow everything to start before querying
@@ -229,6 +225,8 @@ while true; do
   systemctl status pfclient -l
   systemctl status fr24feed -l
   systemctl status adsbexchange -l
+  systemctl status adsbexchange-feed -l
+  systemctl status adsbexchange-mlat -l
   
   (( $DEPRECATED )) && deprecated
   (( $MISSING )) && missing
