@@ -207,7 +207,7 @@ echo ------------------------------------------
 if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
    echo "CONFIG: ADSBExchange"
    echo "ADSBExchange Feed Port: ${ADSBEXCHANGE_PORT:=30004}"
-   echo "ADSBExchange Feed Name: ${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}
+   echo "ADSBExchange Feed Name: ${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}"
    service adsbexchange stop
    service adsbexchange start
 fi
