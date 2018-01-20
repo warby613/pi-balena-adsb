@@ -22,7 +22,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git-core \
     libusb-1.0-0-dev \
     pkg-config \
-    python-dev \
+    python \
+    python3-dev \
     socat \
     wget && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
