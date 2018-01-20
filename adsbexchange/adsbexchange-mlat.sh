@@ -1,13 +1,6 @@
 #!/bin/bash
 
 set -e
-/usr/bin/socat TCP:localhost:30005 TCP:feed.adsbexchange.com:${ADSBEXCHANGE_PORT:=30005}
-
-if [ -z "$ADSBEXCHANGE_NAME"  ]; then
-  name="${ADSBEXCHANGE_NAME}"
-else
-  name="${RESIN_DEVICE_UUID}"
-fi
 
 name=${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}
 echo "Running with name "${name}
