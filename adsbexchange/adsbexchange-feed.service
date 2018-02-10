@@ -1,0 +1,22 @@
+# adsbexchange service for systemd
+
+# upload data to adsbexchange
+# install in /etc/systemd/system
+
+[Unit]
+Description=ADSBexchange ADS-B data feeder
+Documentation=https://www.adsbexchange.com/how-to-feed/
+PartOf=adsbexchange.service
+After=adsbexchange.service
+
+[Service]
+User=adsbexchange
+ExecStart=/home/adsbexchange/adsbexchange-feed.sh
+ExecReload=/bin/kill -HUP $MAINPID
+Type=simple
+Restart=on-failure
+RestartSec=30
+RestartPreventExitStatus=1
+
+[Install]
+WantedBy=adsbexchange.service

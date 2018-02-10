@@ -190,6 +190,35 @@ if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
     service fr24feed start
 fi
 
+# ==========================================
+# ADSBEXCHANGE
+# ==========================================
+# See https://www.adsbexchange.com/how-to-feed/ 
+#
+
+ADSBEXCHANGE_CLIENT="/home/adsbexchange/adsbexchange-feed.sh"
+ADSBEXCHANGE_MLAT_CLIENT="/home/adsbexchange/adsbexchange-mlat.sh"
+ADSBEXCHANGE_CLIENT_CFG="/home/adsbexchange/adsbexchange.cfg"
+
+echo
+echo ------------------------------------------
+echo ADSBEXCHANGE
+echo ------------------------------------------
+
+if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
+   echo "CONFIG: ADSBExchange"
+   echo port=\"${ADSBEXCHANGE_PORT:=30004}\" > ${ADSBEXCHANGE_CLIENT_CFG}
+   echo name=\"${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+   echo lat=\"$LAT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+   echo long=\"$LONG\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+   echo alt=\"$ALT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+   cat ${ADSBEXCHANGE_CLIENT_CFG}
+   systemctl enable adsbexchange-feed
+   systemctl enable adsbexchange-mlat
+   service adsbexchange stop
+   service adsbexchange start
+fi
+
 # Allow everything to start before querying
 sleep 60
 
@@ -202,6 +231,9 @@ while true; do
   systemctl status piaware.service -l
   systemctl status pfclient -l
   systemctl status fr24feed -l
+  systemctl status adsbexchange -l
+  systemctl status adsbexchange-feed -l
+  systemctl status adsbexchange-mlat -l
   
   (( $DEPRECATED )) && deprecated
   (( $MISSING )) && missing
