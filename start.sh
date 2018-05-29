@@ -57,6 +57,16 @@ flightradar24_error()
     echo "------------------------------------------"
 }
 
+adsbexchange_error()
+{
+    echo "------------------------------------------"
+    echo "ADSBEXCHANGE ERROR"
+    echo "Missing required ADSB Exchange variables - \$LAT \$LONG \$ALT"
+    echo "Connect Resin.io terminal and run /usr/bin/fr24feed --signup to get a sharecode"
+    echo "Add variable FR24_KEY to Resin.io device variables once signed up."
+    echo "------------------------------------------"
+}
+
 # ==========================================
 # GENERIC
 # ==========================================
@@ -151,13 +161,14 @@ if [[ -x ${PF_CLIENT} ]] && [[ -w ${PF_CLIENT_CFG} ]]; then
         sed -i "s/PF_SHARECODE/$PF_SHARECODE/" ${PF_CLIENT_CFG}
         sed -i "s/LONG/$LONG/" ${PF_CLIENT_CFG}
         sed -i "s/LAT/$LAT/" ${PF_CLIENT_CFG}
+
+        # Show the Planefinder configuration and start
+        echo "CONFIG: Planefinder"
+        cat ${PF_CLIENT_CFG}
+        service pfclient restart
     else
         planefinder_error
     fi
-    # Show the Planefinder configuration
-    echo "CONFIG: Planefinder"
-    cat ${PF_CLIENT_CFG}
-    service pfclient restart
 fi
 
 # ==========================================
@@ -180,14 +191,15 @@ if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
        [[ ! -z ${LONG} ]] && \
        [[ ! -z ${LAT} ]]; then
         echo fr24key=\"$FR24_KEY\" >> ${FR24_CLIENT_CFG}
+
+        # Show the Planefinder configuration and start
+        echo "CONFIG: Flightradar24"
+        cat ${FR24_CLIENT_CFG}
+        service fr24feed stop
+        service fr24feed start
     else
         flightradar24_error
     fi
-    # Show the Planefinder configuration
-    echo "CONFIG: Flightradar24"
-    cat ${FR24_CLIENT_CFG}
-    service fr24feed stop
-    service fr24feed start
 fi
 
 # ==========================================
@@ -206,17 +218,24 @@ echo ADSBEXCHANGE
 echo ------------------------------------------
 
 if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
-   echo "CONFIG: ADSBExchange"
-   echo port=\"${ADSBEXCHANGE_PORT:=30004}\" > ${ADSBEXCHANGE_CLIENT_CFG}
-   echo name=\"${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}\" >> ${ADSBEXCHANGE_CLIENT_CFG}
-   echo lat=\"$LAT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
-   echo long=\"$LONG\" >> ${ADSBEXCHANGE_CLIENT_CFG}
-   echo alt=\"$ALT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
-   cat ${ADSBEXCHANGE_CLIENT_CFG}
-   systemctl enable adsbexchange-feed
-   systemctl enable adsbexchange-mlat
-   service adsbexchange stop
-   service adsbexchange start
+    if [[ ! -z ${ALT} ]] then
+
+        echo port=\"${ADSBEXCHANGE_PORT:=30004}\" > ${ADSBEXCHANGE_CLIENT_CFG}
+        echo name=\"${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+        echo lat=\"$LAT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+        echo long=\"$LONG\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+        echo alt=\"$ALT\" >> ${ADSBEXCHANGE_CLIENT_CFG}
+
+        # Show the ADSB Exchange configuration and start
+        echo "CONFIG: ADSBExchange"
+        cat ${ADSBEXCHANGE_CLIENT_CFG}
+        systemctl enable adsbexchange-feed
+        systemctl enable adsbexchange-mlat
+        service adsbexchange stop
+        service adsbexchange start
+    else
+        adsbexchange_error
+    fi
 fi
 
 # Allow everything to start before querying
