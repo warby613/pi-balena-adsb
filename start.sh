@@ -188,11 +188,11 @@ if [[ -x ${FR24_CLIENT} ]] && [[ -w ${FR24_CLIENT_CFG} ]]; then
     if [[ ! -z ${FR24_KEY} ]] && \
        [[ ! -z ${LONG} ]] && \
        [[ ! -z ${LAT} ]]; then
-        echo fr24key=\"$FR24_KEY\" >> ${FR24_CLIENT_CFG}
+        echo fr24key=\"${FR24_KEY}\" >> ${FR24_CLIENT_CFG}
 
         # Show the Planefinder configuration and start
         echo "CONFIG: Flightradar24"
-        cat ${FR24_CLIENT_CFG}
+        cat "${FR24_CLIENT_CFG}"
         service fr24feed stop
         service fr24feed start
     else
@@ -216,7 +216,7 @@ echo ADSBEXCHANGE
 echo ------------------------------------------
 
 if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
-    if [[ ! -z ${ALT} ]] then
+    if [[ ! -z ${ALT} ]]; then
 
         echo port=\"${ADSBEXCHANGE_PORT:=30004}\" > ${ADSBEXCHANGE_CLIENT_CFG}
         echo name=\"${ADSBEXCHANGE_NAME:-$RESIN_DEVICE_UUID}\" >> ${ADSBEXCHANGE_CLIENT_CFG}
