@@ -62,8 +62,6 @@ adsbexchange_error()
     echo "------------------------------------------"
     echo "ADSBEXCHANGE ERROR"
     echo "Missing required ADSB Exchange variables - \$LAT \$LONG \$ALT"
-    echo "Connect Resin.io terminal and run /usr/bin/fr24feed --signup to get a sharecode"
-    echo "Add variable FR24_KEY to Resin.io device variables once signed up."
     echo "------------------------------------------"
 }
 
