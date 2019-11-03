@@ -53,7 +53,7 @@ RUN /home/adsbexchange/install_adsbexchange.sh
 
 # Install piaware - https://flightaware.com/adsb/piaware/install
 WORKDIR /tmp
-RUN $(wget -qO- https://flightaware.com/adsb/piaware/install | egrep "language-sh" | cut -d\> -f2 | cut -d\< -f1 | egrep ^wget) && \
+RUN $(wget -qO- https://flightaware.com/adsb/piaware/install | egrep "language-sh" | cut -d\> -f2 | cut -d\< -f1 | egrep ^wget | tail -1) && \
     dpkg -i piaware*.deb
 RUN apt-get update && apt-get install -y --no-install-recommends \
     piaware \
@@ -70,7 +70,7 @@ COPY ./pfclient-config.json /etc/pfclient-config.json
 # Download and install FlightRadar24 client (http://repo.feed.flightradar24.com/install_fr24_rpi.sh)
 WORKDIR /tmp
 # Import GPG key for the APT repository
-RUN gpg --keyserver pgp.mit.edu --recv-keys 40C430F5 && \
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 40C430F5 && \
     gpg --armor --export 40C430F5 | apt-key add -
 # Add APT repository to the config file, removing older entries if exist
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
