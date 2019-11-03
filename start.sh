@@ -236,6 +236,31 @@ if [[ -x ${ADSBEXCHANGE_CLIENT} ]] && [[ -x ${ADSBEXCHANGE_MLAT_CLIENT} ]]; then
     fi
 fi
 
+# ==========================================
+# AvDelphi
+# ==========================================
+# See https://www.avdelphi.com/addsource.html
+#
+
+AV_DELPHI_CLIENT="/home/av-delphi/av-delphi-feed.sh"
+AV_DELPHI_CLIENT_CFG="/home/av-delphi/av-delphi.cfg"
+
+echo
+echo ------------------------------------------
+echo AvDelphi
+echo ------------------------------------------
+
+if [[ -x ${AV_DELPHI_CLIENT} ]]; then
+  echo port=\"${AV_DELPHI_PORT:=24999}\" > ${AV_DELPHI_CLIENT_CFG}
+
+  # Show the AvDelphi configuration and start
+  echo "CONFIG: AvDelphi"
+  cat ${AV_DELPHI_CLIENT_CFG}
+  systemctl enable av-delphi-feed
+  service av-delphi stop
+  service av-delphi start
+fi
+
 # Allow everything to start before querying
 sleep 60
 
@@ -251,6 +276,8 @@ while true; do
   systemctl status adsbexchange -l
   systemctl status adsbexchange-feed -l
   systemctl status adsbexchange-mlat -l
+  systemctl status av-delphi -l
+  systemctl status av-delphi-feed -l
   
   (( $DEPRECATED )) && deprecated
   (( $MISSING )) && missing

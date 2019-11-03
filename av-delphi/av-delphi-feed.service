@@ -1,0 +1,22 @@
+# AvDelphi feed service for systemd
+
+# upload data to AvDelphi
+# install in /etc/systemd/system
+
+[Unit]
+Description=AvDelphi ADS-B data feeder
+Documentation=https://www.avdelphi.com/addsource.html
+PartOf=av-delphi.service
+After=av-delphi.service
+
+[Service]
+User=av-delphi
+ExecStart=/home/av-delphi/av-delphi-feed.sh
+ExecReload=/bin/kill -HUP $MAINPID
+Type=simple
+Restart=on-failure
+RestartSec=30
+RestartPreventExitStatus=1
+
+[Install]
+WantedBy=av-delphi.service

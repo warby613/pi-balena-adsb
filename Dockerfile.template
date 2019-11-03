@@ -80,6 +80,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fr24feed
 COPY ./fr24feed.ini /etc/fr24feed.ini
 
+# Download and install AvDelphi client
+
+RUN adduser --system av-delphi
+WORKDIR /home/av-delphi
+COPY av-delphi /home/av-delphi
+RUN /home/av-delphi/install_av-delphi.sh
+
+
 WORKDIR /root
 
 # Copy start script

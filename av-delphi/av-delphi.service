@@ -1,0 +1,18 @@
+# AvDelphi service for systemd
+
+# upload data to AvDelphi
+# install in /etc/systemd/system
+
+[Unit]
+Description=AvDelphi ADS-B uploader
+Documentation=https://www.avdelphi.com/addsource.html
+Wants=network-online.target
+After=dump1090-fa.service network-online.target time-sync.target
+
+[Service]
+ExecStart=/bin/true
+RemainAfterExit=yes
+Type=oneshot
+
+[Install]
+WantedBy=default.target
