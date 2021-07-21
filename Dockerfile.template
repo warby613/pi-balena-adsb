@@ -1,5 +1,5 @@
 # vi:syntax=dockerfile
-FROM resin/%%RESIN_MACHINE_NAME%%-debian:jessie
+FROM resin/%%RESIN_MACHINE_NAME%%-debian:buster
 
 # Dockerfile Template for Resin.io RTL-SDR Application
 #
@@ -53,7 +53,7 @@ RUN /home/adsbexchange/install_adsbexchange.sh
 
 # Install piaware - https://flightaware.com/adsb/piaware/install
 WORKDIR /tmp
-RUN $(wget -qO- https://flightaware.com/adsb/piaware/install | egrep "language-sh" | cut -d\> -f2 | cut -d\< -f1 | egrep ^wget | tail -1) && \
+RUN wget https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_5.0_all.deb && \
     dpkg -i piaware*.deb
 RUN apt-get update && apt-get install -y --no-install-recommends \
     piaware \
@@ -63,14 +63,14 @@ RUN piaware-config allow-auto-updates yes && \
 
 # Download and install Planefinder client
 WORKDIR /tmp
-RUN wget $(wget -qO- https://planefinder.net/sharing/client | egrep armhf.deb | awk -F\" '{print $2}') && \
+RUN wget http://client.planefinder.net/pfclient_5.0.161_armhf.deb && \
     dpkg -i pfclient*armhf.deb
 COPY ./pfclient-config.json /etc/pfclient-config.json
 
 # Download and install FlightRadar24 client (http://repo.feed.flightradar24.com/install_fr24_rpi.sh)
 WORKDIR /tmp
 # Import GPG key for the APT repository
-RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 40C430F5 && \
+RUN gpg --keyserver keyserver.ubuntu.com --recv-keys 40C430F5 && \
     gpg --armor --export 40C430F5 | apt-key add -
 # Add APT repository to the config file, removing older entries if exist
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
