@@ -11,6 +11,12 @@ FROM resin/%%RESIN_MACHINE_NAME%%-debian:buster
 # Allow systemd to run - this is required for piaware, dump1090, pfclient and fr24feed
 ENV INITSYSTEM on
 
+# Add required keys
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853
+
 # Basic packages installed to allow build and install of Flightaware etc.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
@@ -53,7 +59,7 @@ RUN /home/adsbexchange/install_adsbexchange.sh
 
 # Install piaware - https://flightaware.com/adsb/piaware/install
 WORKDIR /tmp
-RUN wget https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_5.0_all.deb && \
+RUN wget https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_6.0_all.deb && \
     dpkg -i piaware*.deb
 RUN apt-get update && apt-get install -y --no-install-recommends \
     piaware \
